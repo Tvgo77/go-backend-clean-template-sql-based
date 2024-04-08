@@ -5,7 +5,19 @@ FROM golang:1.22-bullseye
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
 RUN apt update && apt install -y \
     zsh \
-    vim
+    vim \
+    locales \
+    postgresql-client && \
+    go install -v github.com/go-delve/delve/cmd/dlv@latest
+
+# Uncomment en_US.UTF-8 for inclusion in generation
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
+    locale-gen
+
+# Set the locale
+ENV LANG en_US.UTF-8  
+ENV LANGUAGE en_US:en  
+ENV LC_ALL en_US.UTF-8  
 
 RUN sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)" && \
     echo "PROMPT='%(?:%{\$fg_bold[green]%}%1{➜%} :%{\$fg_bold[red]%}%1{➜%} ) %{\$fg[cyan]%}%d%{\$reset_color%} \
