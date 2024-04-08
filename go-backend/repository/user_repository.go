@@ -1,9 +1,11 @@
 package repository
 
-type userRepository struct {
+import "go-backend/domain"
 
+type userRepository struct {
+	database domain.Database
 }
 
-func NewUserRepository() userRepository {
-	return userRepository{};
+func NewUserRepository(db domain.Database) userRepository {
+	return userRepository{database: db};
 }
