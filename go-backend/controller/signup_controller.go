@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 
 	"go-backend/domain"
 	"go-backend/setup"
@@ -44,9 +45,15 @@ func (sc *signupController) Signup(c *gin.Context) {
 	}
 	
 	// Create new user
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(request.Password), 8)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
 	user := domain.User{
 		Email: request.Email, 
-		Password: request.Password,
+		PasswordHash: passwordHash,
 	}
 	err = sc.signupUsecase.CreateNewUser(c, &user)
 	if err != nil {
