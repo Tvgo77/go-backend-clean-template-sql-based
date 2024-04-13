@@ -22,8 +22,13 @@ func (ur *userRepository) CheckExistByEmail(ctx context.Context, email string) (
 	defer cancel()
 
 	count, err := ur.database.Count(ctx, &domain.User{Email: email})
-	if err != nil {
-		return false, err
-	}
-	return count > 0, nil
+	return count > 0, err
+}
+
+func (ur *userRepository) Create(ctx context.Context, user *domain.User) error {
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(ur.env.TimeoutSeconds))
+	defer cancel()
+
+	err := ur.database.InsertOne(ctx, user)
+	return err
 }

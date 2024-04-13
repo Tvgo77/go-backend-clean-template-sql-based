@@ -10,4 +10,5 @@ type User struct {
 
 type UserRepository interface {
 	CheckExistByEmail(ctx context.Context, email string) (bool, error)
+	Create(context.Context, *User) error
 }

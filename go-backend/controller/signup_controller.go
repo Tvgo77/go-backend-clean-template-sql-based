@@ -39,11 +39,23 @@ func (sc *signupController) Signup(c *gin.Context) {
 	}
 
 	if hasUser {
-		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: ""})
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Email already registered"})
 		return
 	}
 	
 	// Create new user
+	user := domain.User{
+		Email: request.Email, 
+		Password: request.Password,
+	}
+	err = sc.signupUsecase.CreateNewUser(c, &user)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
 
 	// Response success
+	c.JSON(http.StatusOK, domain.SignupResponse{
+		Message: "Account create success",
+	})
 }

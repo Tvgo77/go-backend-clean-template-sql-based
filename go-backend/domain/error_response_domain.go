@@ -1,5 +1,5 @@
 package domain
 
 type ErrorResponse struct {
-	Message string
+	Message string `json:"message"`
 }

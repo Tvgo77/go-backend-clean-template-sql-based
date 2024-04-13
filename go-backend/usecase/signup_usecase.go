@@ -23,3 +23,8 @@ func (su *signupUsecase) HasUser(ctx context.Context, email string) (bool, error
 	return hasUser, err
 }
 
+func (su *signupUsecase) CreateNewUser(ctx context.Context, user *domain.User) error {
+	err := su.userRepository.Create(ctx, user)
+	return err
+}
+
