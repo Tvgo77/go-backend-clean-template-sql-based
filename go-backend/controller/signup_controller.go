@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 
 	"go-backend/domain"
@@ -12,13 +14,30 @@ type signupController struct {
 	env *setup.Env
 }
 
-func NewSignupController(su domain.SignupUsecase, env *setup.Env) signupController {
-	return signupController{
+func NewSignupController(su domain.SignupUsecase, env *setup.Env) *signupController {
+	return &signupController{
 		signupUsecase: su,
 		env: env,
-	};
+	}
 }
 
-func (sc *signupController) Signup(*gin.Context) {
+func (sc *signupController) Signup(c *gin.Context) {
+	// Check request format
+	var request domain.SignupRequest
+	err := c.ShouldBindJSON(&request)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: err.Error()})
+		return
+	}
 
+	// Check if register email already exist
+	hasUser := sc.signupUsecase.HasUser(c, request.Email)
+	if hasUser {
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: ""})
+		return
+	}
+	
+	// Create new user
+
+	// Response success
 }
