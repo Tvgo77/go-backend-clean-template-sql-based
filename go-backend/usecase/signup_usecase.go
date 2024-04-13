@@ -18,8 +18,8 @@ func NewSignupUsecase(ur domain.UserRepository, env *setup.Env) domain.SignupUse
 	}
 }
 
-func (su *signupUsecase) HasUser(ctx context.Context, email string) bool {
-	hasUser := su.userRepository.CheckExistByEmail(ctx, email)
-	return hasUser
+func (su *signupUsecase) HasUser(ctx context.Context, email string) (bool, error) {
+	hasUser, err := su.userRepository.CheckExistByEmail(ctx, email)
+	return hasUser, err
 }
 

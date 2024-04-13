@@ -16,11 +16,14 @@ func NewUserRepository(db domain.Database, env *setup.Env) domain.UserRepository
 	return &userRepository{database: db, env: env};
 }
 
-func (ur *userRepository) CheckExistByEmail(ctx context.Context, email string) bool {
+func (ur *userRepository) CheckExistByEmail(ctx context.Context, email string) (bool, error) {
+	// Set timeout for database query
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(ur.env.TimeoutSeconds))
 	defer cancel()
 
-	var user domain.User
-	ur.database.WithContext(ctx).Select("id").Where(&domain.User{Email: email}).First(&user)
-	return false
+	count, err := ur.database.Count(ctx, &domain.User{Email: email})
+	if err != nil {
+		return false, err
+	}
+	return count > 0, nil
 }

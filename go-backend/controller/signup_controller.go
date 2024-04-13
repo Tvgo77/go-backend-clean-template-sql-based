@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -31,7 +32,12 @@ func (sc *signupController) Signup(c *gin.Context) {
 	}
 
 	// Check if register email already exist
-	hasUser := sc.signupUsecase.HasUser(c, request.Email)
+	hasUser, err := sc.signupUsecase.HasUser(c, request.Email)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
 	if hasUser {
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: ""})
 		return

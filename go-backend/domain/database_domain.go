@@ -19,4 +19,5 @@ type Database interface {
 	FindOne(context.Context, interface{}, interface{}) (error)
 	UpdateOne(context.Context, interface{}, interface{}) (error)
 	DeleteOne(context.Context, interface{}) (error)
+	Count(context.Context, interface{}) (int, error)
 }

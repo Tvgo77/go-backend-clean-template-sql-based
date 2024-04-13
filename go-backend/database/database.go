@@ -83,3 +83,9 @@ func (p *postgresDB) DeleteOne(ctx context.Context, arg interface{}) error {
 	return result.Error
 }
 
+func (p *postgresDB) Count(ctx context.Context, conds interface{}) (int, error) {
+	var count int64
+	result := p.db.Model(conds).Where(conds).Count(&count)
+	return int(count), result.Error
+}
+

@@ -9,5 +9,5 @@ type User struct {
 }
 
 type UserRepository interface {
-	CheckExistByEmail(ctx context.Context, email string) bool
+	CheckExistByEmail(ctx context.Context, email string) (bool, error)
 }

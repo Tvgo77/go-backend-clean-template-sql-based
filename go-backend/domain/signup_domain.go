@@ -12,5 +12,5 @@ type SignupResponse struct {
 }
 
 type SignupUsecase interface {
-	HasUser(ctx context.Context, email string) bool
+	HasUser(ctx context.Context, email string) (bool, error)
 }
