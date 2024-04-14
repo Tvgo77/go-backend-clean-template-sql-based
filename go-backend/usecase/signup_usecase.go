@@ -2,8 +2,12 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"go-backend/domain"
 	"go-backend/setup"
+	"time"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type signupUsecase struct {
@@ -28,3 +32,15 @@ func (su *signupUsecase) CreateNewUser(ctx context.Context, user *domain.User) e
 	return err
 }
 
+func (su *signupUsecase) NewJWTtoken(user *domain.User) (string, error) {
+	myClaims := jwt.RegisteredClaims{
+		Issuer: "fantasyforum",
+		Subject: fmt.Sprintf("%d", user.ID),
+		IssuedAt: jwt.NewNumericDate(time.Now()),
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 72)),
+		NotBefore: jwt.NewNumericDate(time.Now()),
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodES256, myClaims)
+	signedToken, err := token.SignedString([]byte("secret"))
+	return signedToken, err
+}

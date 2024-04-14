@@ -11,9 +11,11 @@ type SignupRequest struct {
 
 type SignupResponse struct {
 	Message string `json:"message"`
+	Token string `json:"token"`
 }
 
 type SignupUsecase interface {
 	HasUser(ctx context.Context, email string) (bool, error)
 	CreateNewUser(ctx context.Context, user *User) error
+	NewJWTtoken(user *User) (string, error)
 }

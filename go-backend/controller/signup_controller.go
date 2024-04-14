@@ -61,8 +61,16 @@ func (sc *signupController) Signup(c *gin.Context) {
 		return
 	}
 
+	// Generate JWT token
+	token, err := sc.signupUsecase.NewJWTtoken(&user)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
 	// Response success
 	c.JSON(http.StatusOK, domain.SignupResponse{
 		Message: "Account create success",
+		Token: token,
 	})
 }
