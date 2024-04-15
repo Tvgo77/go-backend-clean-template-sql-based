@@ -5,6 +5,7 @@ import (
 	"go-backend/domain"
 	"log"
 
+	"database/sql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -23,16 +24,40 @@ func NewDatabase(dsn string) (domain.Database, error) {
 	return &postgresDB{db: db}, nil
 }
 
+func NewDatabaseFromExist(db *gorm.DB) domain.Database{
+	return &postgresDB{db: db}
+}
+
+func (p *postgresDB) AutoMigrate(dest ...interface{}) error {
+	return p.db.AutoMigrate(dest...)
+}
+
+func (p *postgresDB) Begin(opts ...*sql.TxOptions) *gorm.DB {
+	return p.db.Begin(opts...)
+}
+
+func (p *postgresDB) SavePoint(name string) *gorm.DB {
+	return p.db.SavePoint(name)
+}
+
+func (p *postgresDB) Rollbackto(name string) *gorm.DB {
+	return p.db.RollbackTo(name)
+}
+
+func (p *postgresDB) Rollback() *gorm.DB {
+	return p.db.Rollback()
+}
+
 func (p *postgresDB) First(dest interface{}, conds ...interface{}) (tx *gorm.DB) {
-	return p.db.First(dest, conds)
+	return p.db.First(dest, conds...)
 }
 
 func (p *postgresDB) Select(query interface{}, args ...interface{}) (tx *gorm.DB) {
-	return p.db.Select(query, args)
+	return p.db.Select(query, args...)
 }
 
 func (p *postgresDB) Where(query interface{}, args ...interface{}) (tx *gorm.DB) {
-	return p.db.Where(query, args)
+	return p.db.Where(query, args...)
 }
 
 func (p *postgresDB) WithContext(ctx context.Context) (tx *gorm.DB) {
@@ -83,7 +108,7 @@ func (p *postgresDB) DeleteOne(ctx context.Context, arg interface{}) error {
 	return result.Error
 }
 
-func (p *postgresDB) Count(ctx context.Context, conds interface{}) (int, error) {
+func (p *postgresDB) CountRows(ctx context.Context, conds interface{}) (int, error) {
 	var count int64
 	result := p.db.Model(conds).Where(conds).Count(&count)
 	return int(count), result.Error

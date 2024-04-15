@@ -5,6 +5,7 @@ import (
 	"go-backend/database"
 	"go-backend/router"
 	"go-backend/setup"
+	"go-backend/domain"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -12,6 +13,7 @@ import (
 
 func main() {
 	/* Load Environment Variable */
+	env := &setup.Env{}
 
 	/* Connect to database */
 	dsn := "host=localhost user=postgres password=postgres dbname=postgres port=5432 sslmode=disable"
@@ -21,8 +23,16 @@ func main() {
 		return
 	}
 
+	/* Run database migration if set in env */
+	if env.RunMigration {
+		db.AutoMigrate(&domain.User{})
+	}
+	
 	/* Setup router */
-	router.SignupRouterSetup(&setup.Env{}, db, &gin.RouterGroup{})
+	ginEngine := gin.Default()
+	publicRouter := ginEngine.Group("")
+
+	router.SignupRouterSetup(env, db, publicRouter)
 
 	/* Run */
 }

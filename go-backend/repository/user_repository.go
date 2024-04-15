@@ -21,7 +21,7 @@ func (ur *userRepository) CheckExistByEmail(ctx context.Context, email string) (
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(ur.env.TimeoutSeconds))
 	defer cancel()
 
-	count, err := ur.database.Count(ctx, &domain.User{Email: email})
+	count, err := ur.database.CountRows(ctx, &domain.User{Email: email})
 	return count > 0, err
 }
 

@@ -3,11 +3,19 @@ package domain
 import (
 	"context"
 
+
+	"database/sql"
 	"gorm.io/gorm"
 )
 
 type Database interface {
 	// Necessary *gorm.DB methods
+	AutoMigrate(dest ...interface{}) (error)
+	Begin(opts ...*sql.TxOptions) *gorm.DB
+	SavePoint(name string) *gorm.DB
+	Rollbackto(name string) *gorm.DB
+	Rollback() *gorm.DB
+
 	First(dest interface{}, conds ...interface{}) (tx *gorm.DB)
 	Select(query interface{}, args ...interface{}) (tx *gorm.DB)
 	Where(query interface{}, args ...interface{}) (tx *gorm.DB)
@@ -19,5 +27,5 @@ type Database interface {
 	FindOne(context.Context, interface{}, interface{}) (error)
 	UpdateOne(context.Context, interface{}, interface{}) (error)
 	DeleteOne(context.Context, interface{}) (error)
-	Count(context.Context, interface{}) (int, error)
+	CountRows(context.Context, interface{}) (int, error)
 }
