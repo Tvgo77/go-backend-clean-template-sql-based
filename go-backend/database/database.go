@@ -48,6 +48,10 @@ func (p *postgresDB) Rollback() *gorm.DB {
 	return p.db.Rollback()
 }
 
+func (p *postgresDB) Create(value interface{}) (tx *gorm.DB) {
+	return p.db.Create(value)
+}
+
 func (p *postgresDB) First(dest interface{}, conds ...interface{}) (tx *gorm.DB) {
 	return p.db.First(dest, conds...)
 }
@@ -84,6 +88,7 @@ func (p *postgresDB) Ping() error {
 	return nil
 }
 
+// Should insert struct to table and assign back to default primary key ID
 func (p *postgresDB) InsertOne(ctx context.Context, src interface{}) error {
 	result := p.db.WithContext(ctx).Create(src)
 	return result.Error
@@ -110,7 +115,7 @@ func (p *postgresDB) DeleteOne(ctx context.Context, arg interface{}) error {
 
 func (p *postgresDB) CountRows(ctx context.Context, conds interface{}) (int, error) {
 	var count int64
-	result := p.db.Model(conds).Where(conds).Count(&count)
+	result := p.db.WithContext(ctx).Model(conds).Where(conds).Count(&count)
 	return int(count), result.Error
 }
 
