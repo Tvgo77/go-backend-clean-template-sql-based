@@ -27,7 +27,14 @@ func (jm *JWTmiddleware) GinHandler(c *gin.Context) {
 	// Example Authorization fields:
 	// Authorization: bear <token>
 	credential := c.Request.Header.Get("Authorization")
-	token := strings.Split(credential, " ")[1] // []string{"bear", "<token>"}
+	authFields := strings.Split(credential, " ") // []string{"bear", "<token>"}
+	if len(authFields) < 2 {
+		log.Fatal("Invalid Authorization field in header")
+		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Invalid Authorization field in header"})
+		c.Abort()
+		return
+	}
+	token := authFields[1]  // []string{"bear", "<token>"}
 
 	// Verify token
 	// A simplest verifyFunc just need to return the secret used in signature
