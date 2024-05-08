@@ -40,7 +40,7 @@ func (su *signupUsecase) NewJWTtoken(user *domain.User) (string, error) {
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 72)),
 		NotBefore: jwt.NewNumericDate(time.Now()),
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, myClaims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, myClaims)
 	signedToken, err := token.SignedString([]byte(su.env.TokenSecret))
 	return signedToken, err
 }

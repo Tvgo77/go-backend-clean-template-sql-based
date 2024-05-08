@@ -5,6 +5,7 @@ import (
 	"errors"
 	mock "go-backend/domain/mock"
 	"go-backend/setup"
+	"go-backend/domain"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -73,4 +74,10 @@ func TestHasUser(t *testing.T) {
 		assert.False(t, hasUser)
 		assert.Error(t, err)
 	})
+}
+
+func TestNewJWTtoken(t *testing.T) {
+	su := signupUsecase{env: setup.NewEnv()}
+	_, err := su.NewJWTtoken(&domain.User{ID: 1})
+	assert.NoError(t, err)
 }
