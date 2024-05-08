@@ -41,6 +41,6 @@ func (su *signupUsecase) NewJWTtoken(user *domain.User) (string, error) {
 		NotBefore: jwt.NewNumericDate(time.Now()),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodES256, myClaims)
-	signedToken, err := token.SignedString([]byte("secret"))
+	signedToken, err := token.SignedString([]byte(su.env.TokenSecret))
 	return signedToken, err
 }

@@ -6,6 +6,10 @@ type Env struct {
 	RunMigration bool
 }
 
-func NewEnv() Env {
-	return Env{};
+func NewEnv() *Env {
+	return &Env{
+		TimeoutSeconds: 2,
+		TokenSecret: "secret",
+		RunMigration: false,
+	}
 }
