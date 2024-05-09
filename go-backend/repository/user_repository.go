@@ -18,7 +18,7 @@ func NewUserRepository(db domain.Database, env *setup.Env) domain.UserRepository
 
 func (ur *userRepository) CheckExistByEmail(ctx context.Context, email string) (bool, error) {
 	// Set timeout for database query
-	ctx, cancel := context.WithTimeout(ctx, time.Duration(ur.env.TimeoutSeconds))
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(ur.env.TimeoutSeconds) * time.Second)
 	defer cancel()
 
 	count, err := ur.database.CountRows(ctx, &domain.User{Email: email})
@@ -26,7 +26,7 @@ func (ur *userRepository) CheckExistByEmail(ctx context.Context, email string) (
 }
 
 func (ur *userRepository) Create(ctx context.Context, user *domain.User) error {
-	ctx, cancel := context.WithTimeout(ctx, time.Duration(ur.env.TimeoutSeconds))
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(ur.env.TimeoutSeconds) * time.Second)
 	defer cancel()
 
 	err := ur.database.InsertOne(ctx, user)

@@ -25,8 +25,8 @@ type Database interface {
 	
 	Ping() (error)
 	InsertOne(context.Context, interface{}) (error)
-	FindOne(context.Context, interface{}, interface{}) (error)
-	UpdateOne(context.Context, interface{}, interface{}) (error)
+	FindOne(ctx context.Context, dest interface{}, cond interface{}) (error)
+	UpdateOne(ctx context.Context, old interface{}, new interface{}) (error)
 	DeleteOne(context.Context, interface{}) (error)
 	CountRows(context.Context, interface{}) (int, error)
 }

@@ -40,7 +40,7 @@ func (sc *signupController) Signup(c *gin.Context) {
 	}
 
 	if hasUser {
-		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Email already registered"})
+		c.JSON(http.StatusConflict, domain.ErrorResponse{Message: "Email already registered"})
 		return
 	}
 	

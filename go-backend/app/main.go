@@ -13,7 +13,7 @@ import (
 
 func main() {
 	/* Load Environment Variable */
-	env := &setup.Env{}
+	env := setup.NewEnv()
 
 	/* Connect to database */
 	dsn := "host=localhost user=postgres password=postgres dbname=postgres port=5432 sslmode=disable"
