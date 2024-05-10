@@ -17,7 +17,8 @@ import (
 )
 
 func setupDB() (domain.Database, error) {
-	dsn := "host=localhost user=postgres dbname=forumdb_test port=5432 sslmode=disable"
+	passwd := setup.NewEnv().DBpassword
+	dsn := "host=localhost user=postgres dbname=forumdb_test port=5432 sslmode=disable password=" + passwd
 	db, err := database.NewDatabase(dsn)
 	if err != nil {
 		return nil, err

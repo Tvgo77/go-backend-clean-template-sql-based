@@ -16,7 +16,8 @@ func main() {
 	env := setup.NewEnv()
 
 	/* Connect to database */
-	dsn := "host=localhost user=postgres password=postgres dbname=postgres port=5432 sslmode=disable"
+	passwd := env.DBpassword
+	dsn := "host=localhost user=postgres dbname=forumdb port=5432 sslmode=disable password=" + passwd
 	db, err := database.NewDatabase(dsn)
 	if err != nil {
 		log.Fatal(err)
