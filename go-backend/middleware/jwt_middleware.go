@@ -20,6 +20,19 @@ func NewJWTmiddleware(env *setup.Env) *JWTmiddleware {
 	return &JWTmiddleware{secret: []byte(env.TokenSecret)}
 }
 
+// Return parsed token if verification success
+func VerifyToken(token string, secret []byte) (*jwt.Token, error) {
+	parsedToken, err := jwt.ParseWithClaims(
+		token, 
+		&jwt.RegisteredClaims{}, 
+		func (token *jwt.Token) (interface{}, error) {
+			return secret, nil
+		}, 
+		jwt.WithValidMethods([]string{jwt.SigningMethodHS256.Name}),
+	)
+	return parsedToken, err
+}
+
 // For JWT token authentication
 func (jm *JWTmiddleware) GinHandler(c *gin.Context) {
 	// Before handle request
@@ -38,14 +51,7 @@ func (jm *JWTmiddleware) GinHandler(c *gin.Context) {
 
 	// Verify token
 	// A simplest verifyFunc just need to return the secret used in signature
-	parsedToken, err := jwt.ParseWithClaims(
-		token, 
-		&jwt.RegisteredClaims{}, 
-		func (token *jwt.Token) (interface{}, error) {
-			return jm.secret, nil
-		}, 
-		jwt.WithValidMethods([]string{jwt.SigningMethodHS256.Name}),
-	)
+	parsedToken, err := VerifyToken(token, jm.secret)
 	if err != nil {
 		log.Fatal(err)
 		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Invalid token: " + err.Error()})

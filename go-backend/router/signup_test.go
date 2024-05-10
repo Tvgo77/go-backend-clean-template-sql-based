@@ -11,34 +11,18 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 
-	"go-backend/database"
 	"go-backend/domain"
 	"go-backend/setup"
+	testHelper "go-backend/test_helper"
 )
 
-func setupDB() (domain.Database, error) {
-	passwd := setup.NewEnv().DBpassword
-	dsn := "host=localhost user=postgres dbname=forumdb_test port=5432 sslmode=disable password=" + passwd
-	db, err := database.NewDatabase(dsn)
-	if err != nil {
-		return nil, err
-	}
-
-	tx := db.Begin()
-	err = tx.AutoMigrate(&domain.User{})
-	return database.NewDatabaseFromExist(tx), err
-}
-
-func teardownDB(db domain.Database) {
-	db.Rollback()
-}
 
 func TestSignup(t *testing.T) {
 	// Setup test database
 	env := setup.NewEnv()
-	db, err := setupDB()
+	db, err := testHelper.SetupDB()
 	assert.NoError(t, err)
-	defer teardownDB(db)
+	defer testHelper.TeardownDB(db)
 
 	// Setup test gin engine
 	ginEngine := gin.New()
