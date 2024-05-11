@@ -18,4 +18,5 @@ type LoginResponse struct {
 type LoginUsecase interface {
 	HasUser(ctx context.Context, email string) (bool, error)
 	NewJWTtoken(user *User) (string, error)
+	GetUserByEmail(ctx context.Context, email string) (*User, error)
 }

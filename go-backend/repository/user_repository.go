@@ -32,3 +32,12 @@ func (ur *userRepository) Create(ctx context.Context, user *domain.User) error {
 	err := ur.database.InsertOne(ctx, user)
 	return err
 }
+
+func (ur *userRepository) Fetch(ctx context.Context, conds *domain.User) (*domain.User, error) {
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(ur.env.TimeoutSeconds) * time.Second)
+	defer cancel()
+
+	user := domain.User{}
+	err := ur.database.FindOne(ctx, &user, conds)
+	return &user, err
+}

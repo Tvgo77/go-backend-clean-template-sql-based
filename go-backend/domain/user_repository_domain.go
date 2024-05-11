@@ -15,4 +15,5 @@ func (u1 User) Equals(u2 User) bool {
 type UserRepository interface {
 	CheckExistByEmail(ctx context.Context, email string) (bool, error)
 	Create(context.Context, *User) error
+	Fetch(ctx context.Context, conds *User) (*User, error)
 }
