@@ -1,11 +1,21 @@
 package domain
 
-import "context"
+import (
+	"context"
+	"time"
+)
 
 type User struct {
 	ID uint	`gorm:"primaryKey"`
 	Email string
 	PasswordHash []byte
+	Profile Profile  `gorm:"embedded"`
+}
+
+type Profile struct {
+	Name string  `json:"name"`
+	Bio string  `json:"bio"`
+	BirthDay time.Time `gorm:"type:date"`
 }
 
 func (u1 User) Equals(u2 User) bool {
