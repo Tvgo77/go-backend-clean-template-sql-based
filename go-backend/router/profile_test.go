@@ -31,8 +31,7 @@ func TestProfile(t *testing.T) {
 	// Test 1: Success fetch
 	t.Run("Success fetch", func (t *testing.T) {
 		// Setup request
-		reqBody := domain.FetchProfileRequest{UID: 1}
-		req, err := testHelper.NewJSONreq("GET", "/profile/1", &reqBody)
+		req, err := testHelper.NewJSONreq("GET", "/profile/1", nil)
 		assert.NoError(t, err)
 
 		token, err := middleware.NewJWTuidToken(&domain.User{ID: 77}, env.TokenSecret)
@@ -59,8 +58,7 @@ func TestProfile(t *testing.T) {
 	// Test 2: User not exsit
 	t.Run("User not exsit", func (t *testing.T) {
 		// Setup request
-		reqBody := domain.FetchProfileRequest{UID: 1}
-		req, err := testHelper.NewJSONreq("GET", "/profile/1", &reqBody)
+		req, err := testHelper.NewJSONreq("GET", "/profile/1", nil)
 		assert.NoError(t, err)
 
 		token, err := middleware.NewJWTuidToken(&domain.User{ID: 77}, env.TokenSecret)
@@ -77,8 +75,7 @@ func TestProfile(t *testing.T) {
 	// Test 3: Invalid token
 	t.Run("Invalid token", func (t *testing.T) {
 		// Setup request
-		reqBody := domain.FetchProfileRequest{UID: 1}
-		req, err := testHelper.NewJSONreq("GET", "/profile/1", &reqBody)
+		req, err := testHelper.NewJSONreq("GET", "/profile/1", nil)
 		assert.NoError(t, err)
 
 		req.Header.Set("Authorization", "Bearer " + "invalid_token")
@@ -92,7 +89,7 @@ func TestProfile(t *testing.T) {
 	// Test 4: Success update
 	t.Run("Success update", func (t *testing.T) {
 		// Setup request
-		reqBody := domain.UpdateProfileRequest{UID: 1}
+		reqBody := domain.UpdateProfileRequest{Profile: testHelper.TestUser.Profile}
 		req, err := testHelper.NewJSONreq("POST", "/profile/1", &reqBody)
 		assert.NoError(t, err)
 
@@ -111,12 +108,13 @@ func TestProfile(t *testing.T) {
 		// Start test
 		ginEngine.ServeHTTP(resp, req)
 		assert.Equal(t, http.StatusOK, resp.Result().StatusCode)  // Expect 200 OK
+		assert.Equal(t, user.Profile.Name, testHelper.TestUser.Profile.Name)
 	})
 
 	// Test 5: When update other's
 	t.Run("When update other", func (t *testing.T) {
 		// Setup request
-		reqBody := domain.UpdateProfileRequest{UID: 1}
+		reqBody := domain.UpdateProfileRequest{Profile: testHelper.TestUser.Profile}
 		req, err := testHelper.NewJSONreq("POST", "/profile/1", &reqBody)
 		assert.NoError(t, err)
 

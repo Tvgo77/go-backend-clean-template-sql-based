@@ -5,6 +5,7 @@ import (
 	"go-backend/domain"
 	"go-backend/setup"
 	"net/http"
+	"strconv"
 
 	"github.com/fatih/color"
 	"github.com/gin-gonic/gin"
@@ -25,16 +26,15 @@ func NewProfileController(pu domain.ProfileUsecase, env *setup.Env) *profileCont
 
 func (pc *profileController) FetchProfile(c *gin.Context) {
 	// Check request format
-	var req domain.FetchProfileRequest
-	err := c.ShouldBindJSON(&req)
+	uid := c.Param("uid")
+	uid_int, err := strconv.ParseUint(uid, 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, &domain.ErrorResponse{Message: "Bad Request"})
-		return
+		c.JSON(http.StatusBadRequest, &domain.ErrorResponse{Message: "Unknown user id format"})
 	}
 
 	// Check if user exist
 	// Fetch user
-	user, err := pc.profileUsecase.GetUserByUID(c, req.UID)
+	user, err := pc.profileUsecase.GetUserByUID(c, uint(uid_int))
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusNotFound, &domain.ErrorResponse{Message: "User not found"})
@@ -51,22 +51,28 @@ func (pc *profileController) FetchProfile(c *gin.Context) {
 
 func (pc *profileController) UpdateProfile(c *gin.Context) {
 	// Check request format
+	uid := c.Param("uid")
+	uid_int, err := strconv.ParseUint(uid, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, &domain.ErrorResponse{Message: "Unknown user id format"})
+	}
+
 	var req domain.UpdateProfileRequest
-	err := c.ShouldBindJSON(&req)
+	err = c.ShouldBindJSON(&req)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, &domain.ErrorResponse{Message: "Bad Request"})
 		return
 	}
 
 	// Check if uid in request same with uid in JWT token
-	if fmt.Sprint(req.UID) != c.GetString("userID") {
+	if fmt.Sprint(uid) != c.GetString("userID") {
 		c.JSON(http.StatusUnauthorized, &domain.ErrorResponse{Message: "Can only update your own profile"})
 		return
 	}
 
 	// Update user
 	user := domain.User{
-		ID: uint(req.UID),
+		ID: uint(uid_int),
 		Profile: req.Profile,
 	}
 	err = pc.profileUsecase.UpdateProfile(c, &user)

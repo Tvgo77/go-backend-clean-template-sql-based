@@ -3,7 +3,7 @@ package domain
 import "context"
 
 type FetchProfileRequest struct {
-	UID int `json:"uid" binding:"required"`
+	
 }
 
 type FetchProfileResponse struct {
@@ -11,7 +11,6 @@ type FetchProfileResponse struct {
 }
 
 type UpdateProfileRequest struct {
-	UID int `json:"uid" binding:"required"`
 	Profile Profile  `json:"profile" binding:"required"`
 }
 
@@ -20,6 +19,6 @@ type UpdateProfileResponse struct {
 }
 
 type ProfileUsecase interface {
-	GetUserByUID(ctx context.Context, UID int) (*User, error)
+	GetUserByUID(ctx context.Context, UID uint) (*User, error)
 	UpdateProfile(ctx context.Context, user *User) error
 }
