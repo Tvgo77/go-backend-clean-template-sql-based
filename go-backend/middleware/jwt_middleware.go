@@ -58,7 +58,7 @@ func (jm *JWTmiddleware) GinHandler(c *gin.Context) {
 	authFields := strings.Split(credential, " ") // []string{"bear", "<token>"}
 	if len(authFields) < 2 {
 		log.Fatal("Invalid Authorization field in header")
-		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Invalid Authorization field in header"})
+		c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: "Invalid Authorization field in header"})
 		c.Abort()
 		return
 	}
@@ -69,7 +69,7 @@ func (jm *JWTmiddleware) GinHandler(c *gin.Context) {
 	parsedToken, err := VerifyToken(token, jm.secret)
 	if err != nil {
 		log.Fatal(err)
-		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Invalid token: " + err.Error()})
+		c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: "Invalid token: " + err.Error()})
 		c.Abort()
 		return
 	}
@@ -79,7 +79,7 @@ func (jm *JWTmiddleware) GinHandler(c *gin.Context) {
 		userID, err := claims.GetSubject()
 		if err != nil {
 			log.Fatal(err)
-			c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Invalid token: " + err.Error()})
+			c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: "Invalid token: " + err.Error()})
 			c.Abort()
 			return
 		}
@@ -87,7 +87,7 @@ func (jm *JWTmiddleware) GinHandler(c *gin.Context) {
 		c.Set("userID", userID)
 	} else {
 		log.Fatal("Unknow claims type")
-		c.JSON(http.StatusBadRequest, domain.ErrorResponse{Message: "Invalid token: Unknow claims type"})
+		c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: "Invalid token: Unknow claims type"})
 		c.Abort()
 		return
 	}

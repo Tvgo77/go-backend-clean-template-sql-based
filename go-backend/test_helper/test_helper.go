@@ -9,6 +9,10 @@ import (
 	"net/http"
 )
 
+type TestResponse struct {
+	Message string `json:"message"`
+}
+
 func SetupDB() (domain.Database, error) {
 	passwd := setup.NewEnv().DBpassword
 	dsn := "host=localhost user=postgres dbname=forumdb_test port=5432 sslmode=disable password=" + passwd
