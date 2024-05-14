@@ -1,5 +1,7 @@
 package domain
 
+import "context"
+
 type FetchProfileRequest struct {
 	UID int `json:"uid" binding:"required"`
 }
@@ -18,5 +20,5 @@ type UpdateProfileResponse struct {
 }
 
 type ProfileUsecase interface {
-	
+	GetUserByUID(ctx context.Context, UID int) (*User, error)
 }

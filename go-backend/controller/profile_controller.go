@@ -20,9 +20,23 @@ func NewProfileController(pu domain.ProfileUsecase, env *setup.Env) *profileCont
 }
 
 func (pc *profileController) FetchProfile(c *gin.Context) {
+	// Check request format
 
+	// Check if user exist
+
+	// Fetch user
+
+	// HTTP response
 }
 
 func (pc *profileController) UpdateProfile(c *gin.Context) {
-	
+	// Check request format
+
+	// Check if user exist
+
+	// Check if uid in request same with uid in JWT token
+
+	// Update user
+
+	// HTTP response
 }
