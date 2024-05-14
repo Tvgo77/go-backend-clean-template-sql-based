@@ -24,7 +24,9 @@ func TestProfile(t *testing.T) {
 	env := setup.NewEnv()
 	ginEngine := gin.Default()
 	privateRouter := ginEngine.Group("")
-	LoginRouterSetup(env, db, privateRouter)
+	jm := middleware.NewJWTmiddleware(env)
+	privateRouter.Use(jm.GinHandler)
+	ProfileRouterSetup(env, db, privateRouter)
 
 	// Test 1: Success fetch
 	t.Run("Success fetch", func (t *testing.T) {
@@ -84,7 +86,7 @@ func TestProfile(t *testing.T) {
 
 		// Start test
 		ginEngine.ServeHTTP(resp, req)
-		assert.Equal(t, http.StatusNotFound, resp.Result().StatusCode)  // Expect 404 Not Found
+		assert.Equal(t, http.StatusUnauthorized, resp.Result().StatusCode)  // Expect 401 Unauthorized
 	})
 
 	// Test 4: Success update
@@ -112,7 +114,7 @@ func TestProfile(t *testing.T) {
 	})
 
 	// Test 5: When update other's
-	t.Run("Success update", func (t *testing.T) {
+	t.Run("When update other", func (t *testing.T) {
 		// Setup request
 		reqBody := domain.UpdateProfileRequest{UID: 1}
 		req, err := testHelper.NewJSONreq("POST", "/profile/1", &reqBody)

@@ -26,4 +26,5 @@ type UserRepository interface {
 	CheckExistByEmail(ctx context.Context, email string) (bool, error)
 	Create(context.Context, *User) error
 	Fetch(ctx context.Context, conds *User) (*User, error)
+	Update(ctx context.Context, old *User, new *User) error
 }

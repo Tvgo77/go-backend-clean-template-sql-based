@@ -19,5 +19,14 @@ func NewProfileUsecase(ur domain.UserRepository, env *setup.Env) *profileUsecase
 }
 
 func (pu *profileUsecase) GetUserByUID(ctx context.Context, UID int) (*domain.User, error) {
-	return nil, nil
+	conds := &domain.User{ID: uint(UID)}
+	user, err := pu.userRepository.Fetch(ctx, conds)
+	return user, err
+}
+
+func (pu *profileUsecase) UpdateProfile(ctx context.Context, user *domain.User) (error) {
+	old := &domain.User{ID: user.ID}
+	new := user
+	err := pu.userRepository.Update(ctx, old, new)
+	return err
 }

@@ -41,3 +41,11 @@ func (ur *userRepository) Fetch(ctx context.Context, conds *domain.User) (*domai
 	err := ur.database.FindOne(ctx, &user, conds)
 	return &user, err
 }
+
+func (ur *userRepository) Update(ctx context.Context, old *domain.User, new *domain.User) error {
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(ur.env.TimeoutSeconds) * time.Second)
+	defer cancel()
+
+	err := ur.database.UpdateOne(ctx, old, new)
+	return err
+}

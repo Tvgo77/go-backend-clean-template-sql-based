@@ -21,4 +21,5 @@ type UpdateProfileResponse struct {
 
 type ProfileUsecase interface {
 	GetUserByUID(ctx context.Context, UID int) (*User, error)
+	UpdateProfile(ctx context.Context, user *User) error
 }
