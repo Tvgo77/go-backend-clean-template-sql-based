@@ -36,11 +36,7 @@ func TestLogin(t *testing.T) {
 		reqBody := testHelper.LoginReqBody
 		req, err := testHelper.NewJSONreq("POST", "/login", &reqBody)
 		assert.NoError(t, err)
-
-		// Setup gin context
 		resp := httptest.NewRecorder()
-		c := gin.CreateTestContextOnly(resp, ginEngine)
-		c.Request = req
 
 		// Create user in database first
 		db.SavePoint("one")
@@ -72,11 +68,7 @@ func TestLogin(t *testing.T) {
 		reqBody.Password = "wrong password"
 		req, err := testHelper.NewJSONreq("POST", "/login", &reqBody)
 		assert.NoError(t, err)
-
-		// Setup gin context
 		resp := httptest.NewRecorder()
-		c := gin.CreateTestContextOnly(resp, ginEngine)
-		c.Request = req
 
 		// Create user in database first
 		db.SavePoint("two")
@@ -95,11 +87,7 @@ func TestLogin(t *testing.T) {
 		reqBody := testHelper.LoginReqBody
 		req, err := testHelper.NewJSONreq("POST", "/login", &reqBody)
 		assert.NoError(t, err)
-
-		// Setup gin context
 		resp := httptest.NewRecorder()
-		c := gin.CreateTestContextOnly(resp, ginEngine)
-		c.Request = req
 
 		// Start test
 		ginEngine.ServeHTTP(resp, req)
@@ -111,11 +99,7 @@ func TestLogin(t *testing.T) {
 		// Setup test request
 		req, err := http.NewRequest("POST", "/login", bytes.NewBuffer([]byte("bad request")))
 		assert.NoError(t, err)
-
-		// Setup gin context
 		resp := httptest.NewRecorder()
-		c := gin.CreateTestContextOnly(resp, ginEngine)
-		c.Request = req
 
 		// Start test
 		ginEngine.ServeHTTP(resp, req)

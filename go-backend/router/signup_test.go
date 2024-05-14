@@ -43,11 +43,9 @@ func TestSignup(t *testing.T) {
 
 	t.Run("Success", func(t *testing.T) {
 		resp := httptest.NewRecorder()
-		c := gin.CreateTestContextOnly(resp, ginEngine)
 		req, err := http.NewRequest("POST", "/signup", bytes.NewBuffer(jsonData))
 		assert.NoError(t, err)
 		req.Header.Set("Content-Type", "application/json")
-		c.Request = req
 
 		// Start test
 		result := db.SavePoint("one")
@@ -56,7 +54,7 @@ func TestSignup(t *testing.T) {
 		}
 		defer db.Rollbackto("one")
 
-		ginEngine.ServeHTTP(resp, c.Request)
+		ginEngine.ServeHTTP(resp, req)
 		assert.Equal(t, http.StatusOK, resp.Result().StatusCode) //
 		user := domain.User{}
 		err = db.FindOne(context.Background(), &user, &domain.User{Email: reqBody.Email})
@@ -66,11 +64,9 @@ func TestSignup(t *testing.T) {
 
 	t.Run("Email already exists", func(t *testing.T) {
 		resp := httptest.NewRecorder()
-		c := gin.CreateTestContextOnly(resp, ginEngine)
 		req, err := http.NewRequest("POST", "/signup", bytes.NewBuffer(jsonData))
 		assert.NoError(t, err)
 		req.Header.Set("Content-Type", "application/json")
-		c.Request = req
 
 		result := db.SavePoint("two")
 		if result.Error != nil {
@@ -86,7 +82,7 @@ func TestSignup(t *testing.T) {
 		assert.NoError(t, err)
 
 		// Start test
-		ginEngine.ServeHTTP(resp, c.Request)
+		ginEngine.ServeHTTP(resp, req)
 		assert.Equal(t, http.StatusConflict, resp.Result().StatusCode) //
 
 		db.Rollback()
@@ -96,8 +92,6 @@ func TestSignup(t *testing.T) {
 		req, err := http.NewRequest("POST", "/signup", bytes.NewBuffer([]byte("bad request")))
 		assert.NoError(t, err)
 		resp := httptest.NewRecorder()
-		c := gin.CreateTestContextOnly(resp, ginEngine)
-		c.Request = req
 
 		// Start test
 		result := db.SavePoint("three")
@@ -106,7 +100,7 @@ func TestSignup(t *testing.T) {
 		}
 		defer db.Rollbackto("three")
 
-		ginEngine.ServeHTTP(resp, c.Request)
+		ginEngine.ServeHTTP(resp, req)
 		assert.Equal(t, http.StatusBadRequest, resp.Result().StatusCode)
 		db.Rollback()
 	})
