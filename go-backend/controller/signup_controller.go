@@ -35,7 +35,7 @@ func (sc *signupController) Signup(c *gin.Context) {
 	// Check if register email already exist
 	hasUser, err := sc.signupUsecase.HasUser(c, request.Email)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		return
 	}
 
@@ -47,7 +47,7 @@ func (sc *signupController) Signup(c *gin.Context) {
 	// Create new user
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(request.Password), 8)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		return
 	}
 
@@ -57,14 +57,14 @@ func (sc *signupController) Signup(c *gin.Context) {
 	}
 	err = sc.signupUsecase.CreateNewUser(c, &user)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		return
 	}
 
 	// Generate JWT token
 	token, err := sc.signupUsecase.NewJWTtoken(&user)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		return
 	}
 

@@ -33,7 +33,7 @@ func (lc *loginController) Login(c *gin.Context) {
 	// Check if user exist
 	hasUser, err := lc.loginUsecase.HasUser(c, req.Email)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		return
 	}
 	if !hasUser {
@@ -44,7 +44,7 @@ func (lc *loginController) Login(c *gin.Context) {
 	// Fetch user
 	user, err := lc.loginUsecase.GetUserByEmail(c, req.Email)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		return
 	}
 
@@ -58,7 +58,7 @@ func (lc *loginController) Login(c *gin.Context) {
 	// Generate new JWT access token
 	token, err := lc.loginUsecase.NewJWTtoken(user)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		return
 	}
 
