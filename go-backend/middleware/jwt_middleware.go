@@ -1,9 +1,11 @@
 package middleware
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	"go-backend/domain"
 	"go-backend/setup"
@@ -18,6 +20,19 @@ type JWTmiddleware struct {
 
 func NewJWTmiddleware(env *setup.Env) *JWTmiddleware {
 	return &JWTmiddleware{secret: []byte(env.TokenSecret)}
+}
+
+func NewJWTuidToken(user *domain.User, secret string) (string, error) {
+	myClaims := jwt.RegisteredClaims{
+		Issuer: "fantasyforum",
+		Subject: fmt.Sprintf("%d", user.ID),
+		IssuedAt: jwt.NewNumericDate(time.Now()),
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 72)),
+		NotBefore: jwt.NewNumericDate(time.Now()),
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, myClaims)
+	signedToken, err := token.SignedString([]byte(secret))
+	return signedToken, err
 }
 
 // Return parsed token if verification success
