@@ -7,7 +7,7 @@ type FetchProfileRequest struct {
 }
 
 type FetchProfileResponse struct {
-	Profile  // Embedded JSON struct
+	Profile Profile  `json:"profile"`
 }
 
 type UpdateProfileRequest struct {

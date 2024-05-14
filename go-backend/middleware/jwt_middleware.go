@@ -68,7 +68,7 @@ func (jm *JWTmiddleware) GinHandler(c *gin.Context) {
 	// A simplest verifyFunc just need to return the secret used in signature
 	parsedToken, err := VerifyToken(token, jm.secret)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: "Invalid token: " + err.Error()})
 		c.Abort()
 		return
@@ -78,7 +78,7 @@ func (jm *JWTmiddleware) GinHandler(c *gin.Context) {
 		// Set token's user id in gin context
 		userID, err := claims.GetSubject()
 		if err != nil {
-			log.Fatal(err)
+			log.Print(err)
 			c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: "Invalid token: " + err.Error()})
 			c.Abort()
 			return
@@ -86,7 +86,7 @@ func (jm *JWTmiddleware) GinHandler(c *gin.Context) {
 
 		c.Set("userID", userID)
 	} else {
-		log.Fatal("Unknow claims type")
+		log.Print("Unknow claims type")
 		c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: "Invalid token: Unknow claims type"})
 		c.Abort()
 		return
