@@ -5,13 +5,15 @@ type Env struct {
 	DBpassword string
 	TokenSecret string
 	RunMigration bool
+	TestMode bool
 }
 
 func NewEnv() *Env {
 	return &Env{
 		TimeoutSeconds: 2,
-		DBpassword: "0123456789sqa9876543210",
+		DBpassword: "postgres",
 		TokenSecret: "secret",
-		RunMigration: false,
+		RunMigration: true,
+		TestMode: true,
 	}
 }
