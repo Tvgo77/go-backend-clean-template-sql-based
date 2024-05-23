@@ -7,27 +7,27 @@ This project is a modified version of [go-backend-clean-architecture](https://gi
 To understand clean architecture, please go to original author's blog: [Go Backend Clean Architecture](https://amitshekhar.me/blog/go-backend-clean-architecture)
 
 ## Tech Used
-• Docker (Environment setup)
-• Gin framework (Http router)
-• JWT authentication
-• Mock (Unit test)
-• Postgres (Database)
-• Gorm (golang orm)
+• Docker (Environment setup)  
+• Gin framework (Http router)  
+• JWT authentication  
+• Mock (Unit test)  
+• Postgres (Database)  
+• Gorm (golang orm)  
 
 ## Installation
 ### Requirements: 
-Install docker and docker-compose (latest version recommended). 
-vscode and devcontainer extension (optional but recommended, or you want to manually run docker compose)
+Install docker and docker-compose (latest version recommended).  
+vscode and devcontainer extension (optional but recommended, or you want to manually run docker compose)  
 ### How to run in vscode
-Ctrl+Shift+P to open command menu. Search and Choose **Rebuild and Reopen in container** 
-After reopening in container, run test to check if everything is OK.
+Ctrl+Shift+P to open command menu. Search and Choose **Rebuild and Reopen in container**  
+After reopening in container, run test to check if everything is OK.  
 ```bash
 go test go-backend/...
 ```
 
 ## Tips
-You can run mock.sh in go-backend/domain to generate new mock file
-To start server
+You can run mock.sh in go-backend/domain to generate new mock file  
+To start server  
 ```bash
 cd ./go-backend
 go run app/main.go
