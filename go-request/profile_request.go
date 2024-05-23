@@ -8,7 +8,7 @@ import (
 )
 
 func Profile(uid string, token string) {
-	url := "http://localhost:8080/" + uid
+	url := "http://localhost:8080/profile/" + uid
 
 	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
