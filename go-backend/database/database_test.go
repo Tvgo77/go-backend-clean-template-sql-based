@@ -15,7 +15,7 @@ import (
 func setupDB() (domain.Database, error) {
 	// Connect to empty test database
 	passwd := setup.NewEnv().DBpassword
-	dsn := "host=localhost user=postgres dbname=forumdb_test port=5432 sslmode=disable password=" + passwd
+	dsn := "host=localhost user=postgres dbname=postgres port=5432 sslmode=disable password=" + passwd
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err

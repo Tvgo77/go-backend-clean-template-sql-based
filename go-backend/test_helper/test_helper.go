@@ -15,7 +15,7 @@ type TestResponse struct {
 
 func SetupDB() (domain.Database, error) {
 	passwd := setup.NewEnv().DBpassword
-	dsn := "host=localhost user=postgres dbname=forumdb_test port=5432 sslmode=disable password=" + passwd
+	dsn := "host=localhost user=postgres dbname=postgres port=5432 sslmode=disable password=" + passwd
 	db, err := database.NewDatabase(dsn)
 	if err != nil {
 		return nil, err
