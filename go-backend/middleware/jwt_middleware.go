@@ -57,7 +57,7 @@ func (jm *JWTmiddleware) GinHandler(c *gin.Context) {
 	credential := c.Request.Header.Get("Authorization")
 	authFields := strings.Split(credential, " ") // []string{"bear", "<token>"}
 	if len(authFields) < 2 {
-		log.Fatal("Invalid Authorization field in header")
+		log.Print("Invalid Authorization field in header")
 		c.JSON(http.StatusUnauthorized, domain.ErrorResponse{Message: "Invalid Authorization field in header"})
 		c.Abort()
 		return
